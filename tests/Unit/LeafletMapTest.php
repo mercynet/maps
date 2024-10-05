@@ -1,5 +1,8 @@
 <?php
 
+use Maps\Exceptions\InvalidMaxZoomException;
+use Maps\Exceptions\InvalidZoomException;
+use Maps\Leaflet\Exceptions\LeafletInvalidCenterException;
 use Maps\Leaflet\LeafletMap;
 use Maps\Leaflet\LeafletConfig;
 
@@ -78,7 +81,7 @@ it('throws exception for invalid center', function () {
         'center' => ['invalid', 'center'],
     ]);
 
-    expect(fn() => $map->getCenter())->toThrow(\UnexpectedValueException::class);
+    expect(fn() => $map->getCenter())->toThrow(LeafletInvalidCenterException::class);
 });
 
 it('throws exception for invalid zoom', function () {
@@ -86,7 +89,7 @@ it('throws exception for invalid zoom', function () {
         'zoom' => 'invalid',
     ]);
 
-    expect(fn() => $map->getZoom())->toThrow(\UnexpectedValueException::class);
+    expect(fn() => $map->getZoom())->toThrow(InvalidZoomException::class);
 });
 
 it('throws exception for invalid tileLayer', function () {
@@ -94,7 +97,7 @@ it('throws exception for invalid tileLayer', function () {
         'tileLayer' => 12345,
     ]);
 
-    expect(fn() => $map->getTileLayer())->toThrow(\UnexpectedValueException::class);
+    expect(fn() => $map->getTileLayer())->toThrow(UnexpectedValueException::class);
 });
 
 it('throws exception for invalid maxZoom', function () {
@@ -102,5 +105,5 @@ it('throws exception for invalid maxZoom', function () {
         'maxZoom' => 'invalid',
     ]);
 
-    expect(fn() => $map->getMaxZoom())->toThrow(\UnexpectedValueException::class);
+    expect(fn() => $map->getMaxZoom())->toThrow(InvalidMaxZoomException::class);
 });

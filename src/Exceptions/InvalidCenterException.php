@@ -6,7 +6,7 @@ use Exception;
 
 class InvalidCenterException extends MapException
 {
-    public function __construct($message = "An error occurred with the map.", $code = 0, Exception $previous = null)
+    public function __construct(string $message = "Invalid center coordinates.", int $code = 0, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

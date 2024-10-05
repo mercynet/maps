@@ -6,7 +6,7 @@ use Exception;
 
 class InvalidTileLayerException extends MapException
 {
-    public function __construct($message = "Invalid tile layer URL.", $code = 0, Exception $previous = null)
+    public function __construct(string $message = "Invalid tile layer URL.", int $code = 0, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
