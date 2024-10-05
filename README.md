@@ -15,7 +15,7 @@ MapPackage is a PHP library designed to facilitate the integration and rendering
 To install the package, use Composer:
 
 ```bash
-composer require yourname/mappackage
+composer require mercynet/maps
 ```
 ## Usage
 
