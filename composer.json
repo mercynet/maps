@@ -1,0 +1,15 @@
+{
+  "name": "yourname/mappackage",
+  "description": "A package to load maps with support for Leaflet and Google Maps",
+  "require": {
+    "php": "^8.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "MapPackage\\": "src/"
+    }
+  },
+  "require-dev": {
+    "pestphp/pest": "^3.0"
+  }
+}
