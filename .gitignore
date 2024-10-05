@@ -1,0 +1,28 @@
+# Ignore composer dependencies
+/vendor/
+
+# Ignore PhpStorm project files
+/.idea/
+
+# Ignore node_modules if using Node.js
+/node_modules/
+
+# Ignore environment variables
+.env
+
+# Ignore log files
+*.log
+
+# Ignore cache directories
+/cache/
+/tmp/
+
+# Ignore PHPUnit and Pest coverage reports
+/coverage/
+
+# Ignore compiled files
+*.compiled.php
+
+# Ignore other system files
+.DS_Store
+Thumbs.db
