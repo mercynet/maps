@@ -1,5 +1,5 @@
 {
-  "name": "yourname/mappackage",
+  "name": "mercynet/maps",
   "description": "A package to load maps with support for Leaflet and Google Maps",
   "require": {
     "php": "^8.3"
