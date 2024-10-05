@@ -4,6 +4,14 @@ namespace Maps\Leaflet;
 
 class LeafletConfig
 {
+    /**
+     * @return array{
+     *     center: float[],
+     *     zoom: int,
+     *     tileLayer: string,
+     *     maxZoom: int
+     * }
+     */
     public static function getDefaultOptions(): array
     {
         return [

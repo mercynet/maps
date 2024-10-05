@@ -44,3 +44,63 @@ it('loads default values when options are not provided', function () {
         ->and($map->getTileLayer())->toBe(LeafletConfig::getTileLayer())
         ->and($map->getMaxZoom())->toBe(LeafletConfig::getMaxZoom());
 });
+
+it('initializes correctly', function () {
+    $map = new LeafletMap('map-id', [
+        'center' => [51.505, -0.09],
+        'zoom' => 13,
+        'tileLayer' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'maxZoom' => 18,
+    ]);
+
+    expect($map->getId())->toBe('map-id')
+        ->and($map->getCenter())->toBe([51.505, -0.09])
+        ->and($map->getZoom())->toBe(13)
+        ->and($map->getTileLayer())->toBe('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+        ->and($map->getMaxZoom())->toBe(18);
+});
+
+it('renders correctly', closure: function () {
+    $map = new LeafletMap('map-id', [
+        'center' => [51.505, -0.09],
+        'zoom' => 13,
+        'tileLayer' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'maxZoom' => 18,
+    ]);
+
+    $output = $map->render();
+    expect($output)->toContain('<div id="map-id"');
+    expect($output)->toContain('L.map(\'map-id\')');
+});
+
+it('throws exception for invalid center', function () {
+    $map = new LeafletMap('map-id', [
+        'center' => ['invalid', 'center'],
+    ]);
+
+    expect(fn() => $map->getCenter())->toThrow(\UnexpectedValueException::class);
+});
+
+it('throws exception for invalid zoom', function () {
+    $map = new LeafletMap('map-id', [
+        'zoom' => 'invalid',
+    ]);
+
+    expect(fn() => $map->getZoom())->toThrow(\UnexpectedValueException::class);
+});
+
+it('throws exception for invalid tileLayer', function () {
+    $map = new LeafletMap('map-id', [
+        'tileLayer' => 12345,
+    ]);
+
+    expect(fn() => $map->getTileLayer())->toThrow(\UnexpectedValueException::class);
+});
+
+it('throws exception for invalid maxZoom', function () {
+    $map = new LeafletMap('map-id', [
+        'maxZoom' => 'invalid',
+    ]);
+
+    expect(fn() => $map->getMaxZoom())->toThrow(\UnexpectedValueException::class);
+});
