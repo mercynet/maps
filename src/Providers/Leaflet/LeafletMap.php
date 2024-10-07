@@ -1,12 +1,12 @@
 <?php
 
-namespace Maps\Leaflet;
+namespace Maps\Providers\Leaflet;
 
 use Maps\Exceptions\InvalidMaxZoomException;
 use Maps\Exceptions\InvalidViewPathException;
 use Maps\Exceptions\InvalidZoomException;
 use Maps\Interfaces\MapInterface;
-use Maps\Leaflet\Exceptions\LeafletInvalidCenterException;
+use Maps\Providers\Leaflet\Exceptions\LeafletInvalidCenterException;
 
 /**
  * The LeafletMap class is responsible for configuring and rendering a Leaflet map.
@@ -25,7 +25,7 @@ class LeafletMap implements MapInterface
      */
     private string $id;
 
-    private ?string $view = __DIR__ . '/../Views/Leaflet/map.php';
+    private string $view = __DIR__.'/Views/map.php';
 
     /**
      * Constructor for the LeafletMap class.
@@ -36,7 +36,7 @@ class LeafletMap implements MapInterface
      */
     public function __construct(string $id)
     {
-        $this->config = LeafletConfig::getDefaultOptions();
+        $this->config = LeafletConfig::defaultOptions();
         $this->id = $id;
     }
 
@@ -156,9 +156,19 @@ class LeafletMap implements MapInterface
      */
     public function setCustomView(string $viewPath): void
     {
-        if(!file_exists($this->view)) {
+        if(!file_exists($viewPath)) {
             throw new InvalidViewPathException();
         }
         $this->view = $viewPath;
+    }
+
+    /**
+     * Get the current configuration of the map.
+     *
+     * @return array The current configuration options of the map.
+     */
+    public function getData(array $options = []): array
+    {
+        return array_merge($this->config, $options);
     }
 }

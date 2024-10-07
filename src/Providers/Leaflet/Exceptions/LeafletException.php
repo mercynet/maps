@@ -1,6 +1,6 @@
 <?php
 
-namespace Maps\Leaflet\Exceptions;
+namespace Maps\Providers\Leaflet\Exceptions;
 
 use Exception;
 use Maps\Exceptions\MapException;
