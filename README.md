@@ -176,7 +176,7 @@ You can create a map using the `MapProviderFactory`:
 ```php
 use MapPackage\Factories\MapProviderFactory;
 
-$map = MapProviderFactory::create('leaflet');
+$map = MapProviderFactory::create('leaflet', 'mapId');
 ````
 
 ### Rendering a Map
