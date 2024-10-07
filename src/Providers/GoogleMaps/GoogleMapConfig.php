@@ -2,43 +2,54 @@
 
 namespace Maps\Providers\GoogleMaps;
 
-use Google\Client;
-
+/**
+ * Class GoogleMapConfig
+ *
+ * This class provides default configuration options for Google Maps.
+ */
 class GoogleMapConfig
 {
-    protected static Client $client;
-    private static string $apiKey = '';
-
-    public static function initialize(string $apiKey): void
-    {
-        self::$client = new Client();
-        self::$client->setDeveloperKey($apiKey);
-        self::$apiKey = $apiKey;
-    }
-
-    public static function getDefaultOptions(): array
+    /**
+     * Get the default configuration options for the Google map.
+     *
+     * @return array{
+     *     center: float[],
+     *     zoom: int,
+     *     mapType: string,
+     *     polygons: array,
+     *     markers: array,
+     *     overlays: array
+     * }
+     */
+    public static function defaultOptions(): array
     {
         return [
-            'center' => [0.0, 0.0],
-            'zoom' => 8,
-            'tileLayer' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            'maxZoom' => 18,
-            'apiKey' => self::$apiKey, // Add the API key here
+            'center' => [37.7749, -122.4194], // Default center coordinates (San Francisco)
+            'zoom' => 12,                    // Default zoom level
+            'mapType' => 'roadmap',          // Default map type
+            'polygons' => [],                // Support for polygons
+            'markers' => [],                 // Support for custom markers
+            'overlays' => []                 // Support for overlays
         ];
     }
 
-    public static function getTileLayer(): string
+    /**
+     * Get the default map type for the Google map.
+     *
+     * @return string The default map type
+     */
+    public static function getMapType(): string
     {
-        return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        return 'roadmap';
     }
 
-    public static function getMaxZoom(): int
+    /**
+     * Get the default zoom level for the Google map.
+     *
+     * @return int The default zoom level
+     */
+    public static function getZoom(): int
     {
-        return 19;
-    }
-
-    public static function getClient(): Client
-    {
-        return self::$client;
+        return 12;
     }
 }

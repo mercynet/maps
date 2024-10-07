@@ -9,10 +9,9 @@ use Maps\Providers\GoogleMaps\GoogleMapsMap;
 
 it('can load default configurations', function () {
     $map = new GoogleMapsMap('map');
-    expect($map->getCenter())->toBe(GoogleMapConfig::getDefaultOptions()['center'])
-        ->and($map->getZoom())->toBe(GoogleMapConfig::getDefaultOptions()['zoom'])
-        ->and($map->getTileLayer())->toBe(GoogleMapConfig::getDefaultOptions()['tileLayer'])
-        ->and($map->getMaxZoom())->toBe(GoogleMapConfig::getDefaultOptions()['maxZoom']);
+    expect($map->getCenter())->toBe(GoogleMapConfig::defaultOptions()['center'])
+        ->and($map->getZoom())->toBe(GoogleMapConfig::defaultOptions()['zoom'])
+        ->and($map->getMapType())->toBe(GoogleMapConfig::defaultOptions()['mapType']);
 });
 
 it('can render the map with default configurations', function () {
@@ -27,9 +26,20 @@ it('can render the map with custom configurations', function () {
     $options = [
         'center' => [40.7128, -74.0060],
         'zoom' => 10,
-        'tileLayer' => 'https://{s}.tile.custom.org/{z}/{x}/{y}.png',
-        'maxZoom' => 18,
-        'apiKey' => 'custom_api_key',
+        'mapType' => 'satellite',
+        'markers' => [
+            [
+                'coordinates' => [40.7128, -74.0060],
+                'icon' => 'https://example.com/icon.png',
+                'popupText' => 'New York'
+            ]
+        ],
+        'overlays' => [
+            [
+                'url' => 'https://example.com/overlay.png',
+                'bounds' => [[40.7128, -74.0060], [40.7308, -73.9352]]
+            ]
+        ]
     ];
     $html = $map->render($options);
     expect($html)->toContain('<div id="map" style="width: 100%; height: 500px;"></div>')
@@ -53,12 +63,6 @@ it('throws exception for invalid zoom', function () {
     expect(fn() => $map->render($options))->toThrow(InvalidZoomException::class);
 });
 
-it('throws exception for invalid tileLayer', function () {
-    $map = new GoogleMapsMap('map-id');
-    $options = ['tileLayer' => 12345];
-    expect(fn() => $map->render($options))->toThrow(\UnexpectedValueException::class);
-});
-
 it('throws exception for invalid maxZoom', function () {
     $map = new GoogleMapsMap('map-id');
     $options = ['maxZoom' => 'invalid'];
@@ -75,9 +79,20 @@ it('returns the correct data', function () {
     $options = [
         'center' => [40.7128, -74.0060],
         'zoom' => 10,
-        'tileLayer' => 'https://{s}.tile.custom.org/{z}/{x}/{y}.png',
-        'maxZoom' => 18,
-        'apiKey' => 'custom_api_key',
+        'mapType' => 'satellite',
+        'markers' => [
+            [
+                'coordinates' => [40.7128, -74.0060],
+                'icon' => 'https://example.com/icon.png',
+                'popupText' => 'New York'
+            ]
+        ],
+        'overlays' => [
+            [
+                'url' => 'https://example.com/overlay.png',
+                'bounds' => [[40.7128, -74.0060], [40.7308, -73.9352]]
+            ]
+        ]
     ];
-    expect($map->getData($options))->toBe(array_merge(GoogleMapConfig::getDefaultOptions(), $options));
+    expect($map->getData($options))->toBe(array_merge(GoogleMapConfig::defaultOptions(), $options));
 });

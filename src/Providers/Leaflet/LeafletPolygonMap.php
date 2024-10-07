@@ -1,19 +1,16 @@
 <?php
 
-namespace Maps\Providers\GoogleMaps;
+namespace Maps\Providers\Leaflet;
 
-use Maps\Exceptions\InvalidCenterException;
-use Maps\Exceptions\InvalidMaxZoomException;
 use Maps\Exceptions\InvalidViewPathException;
-use Maps\Exceptions\InvalidZoomException;
 use Maps\Interfaces\MapInterface;
 
 /**
- * Class GoogleMapsMap
+ * Class LeafletPolygonMap
  *
- * This class is responsible for rendering a Google Maps map with support for polygons, custom markers, and overlays.
+ * This class is responsible for rendering a Leaflet map with support for polygons, custom markers, and overlays.
  */
-class GoogleMapsMap implements MapInterface
+class LeafletPolygonMap implements MapInterface
 {
     /**
      * @var array Configuration options for the map
@@ -28,16 +25,16 @@ class GoogleMapsMap implements MapInterface
     /**
      * @var string The path to the view file used for rendering the map
      */
-    protected string $view = __DIR__ . '/Views/map.php';
+    protected string $view = __DIR__.'/Views/polygon_map.php';
 
     /**
-     * GoogleMapsMap constructor.
+     * LeafletPolygonMap constructor.
      *
      * @param string $id The ID of the map element
      */
     public function __construct(string $id)
     {
-        $this->config = GoogleMapConfig::defaultOptions();
+        $this->config = LeafletConfig::defaultOptions();
         $this->id = $id;
     }
 
@@ -62,13 +59,23 @@ class GoogleMapsMap implements MapInterface
     }
 
     /**
-     * Get the map type of the map.
+     * Get the tile layer URL of the map.
      *
-     * @return string The map type
+     * @return string The tile layer URL
      */
-    public function getMapType(): string
+    public function getTileLayer(): string
     {
-        return $this->config['mapType'];
+        return $this->config['tileLayer'];
+    }
+
+    /**
+     * Get the maximum zoom level of the map.
+     *
+     * @return int The maximum zoom level
+     */
+    public function getMaxZoom(): int
+    {
+        return $this->config['maxZoom'];
     }
 
     /**
@@ -84,38 +91,20 @@ class GoogleMapsMap implements MapInterface
     /**
      * Render the map with the given options.
      *
-     * @param  array  $options  Additional options for rendering the map
-     *
+     * @param array $options Additional options for rendering the map
      * @return string The rendered map HTML
-     * @throws InvalidZoomException
-     * @throws InvalidCenterException
-     * @throws InvalidMaxZoomException
      */
     public function render(array $options = []): string
     {
         $this->config = array_merge($this->config, $options);
-        $id = $this->id;
-        $center = $this->config['center'];
-        $zoom = $this->config['zoom'];
-        $mapType = $this->config['mapType'];
+        $id = $this->getId();
+        $center = $this->getCenter();
+        $zoom = $this->getZoom();
+        $tileLayer = $this->getTileLayer();
+        $maxZoom = $this->getMaxZoom();
         $polygons = $this->config['polygons'] ?? [];
         $markers = $this->config['markers'] ?? [];
         $overlays = $this->config['overlays'] ?? [];
-
-        // Validate center coordinates
-        if (count($center) !== 2 || !is_numeric($center[0]) || !is_numeric($center[1])) {
-            throw new InvalidCenterException('Invalid center coordinates.');
-        }
-
-        // Validate zoom level
-        if (!is_int($zoom) || $zoom < 0 || $zoom > 21) {
-            throw new InvalidZoomException('Invalid zoom level.');
-        }
-
-        // Validate maxZoom level
-        if (isset($this->config['maxZoom']) && (!is_int($this->config['maxZoom']) || $this->config['maxZoom'] < 0 || $this->config['maxZoom'] > 21)) {
-            throw new InvalidMaxZoomException('Invalid maxZoom level.');
-        }
 
         if (!file_exists($this->view)) {
             error_log('View file not found: ' . $this->view);
@@ -123,7 +112,7 @@ class GoogleMapsMap implements MapInterface
         }
 
         ob_start();
-        $variables = compact('id', 'center', 'zoom', 'mapType', 'polygons', 'markers', 'overlays');
+        $variables = compact('id', 'center', 'zoom', 'tileLayer', 'maxZoom', 'polygons', 'markers', 'overlays');
         extract($variables);
         include $this->view;
         $output = ob_get_clean();

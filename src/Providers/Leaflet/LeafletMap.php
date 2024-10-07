@@ -25,7 +25,7 @@ class LeafletMap implements MapInterface
      */
     private string $id;
 
-    private string $view = __DIR__ . '/../../Views/Leaflet/map.php';
+    private string $view = __DIR__.'/Views/map.php';
 
     /**
      * Constructor for the LeafletMap class.
@@ -36,7 +36,7 @@ class LeafletMap implements MapInterface
      */
     public function __construct(string $id)
     {
-        $this->config = LeafletConfig::getDefaultOptions();
+        $this->config = LeafletConfig::defaultOptions();
         $this->id = $id;
     }
 
