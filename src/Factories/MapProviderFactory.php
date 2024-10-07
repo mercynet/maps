@@ -19,13 +19,11 @@ class MapProviderFactory
     protected static array $providers = [];
 
     /**
-     * Constructor for MapProviderFactory.
-     *
      * Initializes the factory with optional custom configurations for map providers.
      *
      * @param array<string, string> $customConfig Optional custom configuration for map providers.
      */
-    public function __construct(array $customConfig = [])
+    public static function initialize(array $customConfig = []): void
     {
         self::loadProviders($customConfig);
     }
@@ -37,7 +35,7 @@ class MapProviderFactory
      *
      * @param array $customConfig Optional custom configuration for map providers.
      */
-    public static function loadProviders(array $customConfig = []): void
+    protected static function loadProviders(array $customConfig = []): void
     {
         $defaultConfig = include '../config/maps.php';
         self::$providers = array_merge($defaultConfig['providers'], $customConfig['providers'] ?? []);
@@ -47,11 +45,16 @@ class MapProviderFactory
      * Creates a map provider instance based on the given type.
      *
      * @param string $type The type of map provider to create.
+     * @param string $id The ID of the map element.
      * @return MapInterface The created map provider instance.
      * @throws InvalidProviderException If the map provider type is unsupported.
      */
     public static function create(string $type, string $id): MapInterface
     {
+        if (empty(self::$providers)) {
+            self::initialize();
+        }
+
         if (!isset(self::$providers[$type])) {
             throw new InvalidProviderException("Unsupported map provider type: $type");
         }
