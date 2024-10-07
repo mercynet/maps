@@ -25,7 +25,7 @@ class LeafletMap implements MapInterface
      */
     private string $id;
 
-    private ?string $view = __DIR__ . '/../Views/Leaflet/map.php';
+    private string $view = __DIR__ . '/../Views/Leaflet/map.php';
 
     /**
      * Constructor for the LeafletMap class.
@@ -156,9 +156,19 @@ class LeafletMap implements MapInterface
      */
     public function setCustomView(string $viewPath): void
     {
-        if(!file_exists($this->view)) {
+        if(!file_exists($viewPath)) {
             throw new InvalidViewPathException();
         }
         $this->view = $viewPath;
+    }
+
+    /**
+     * Get the current configuration of the map.
+     *
+     * @return array The current configuration options of the map.
+     */
+    public function getData(array $options = []): array
+    {
+        return array_merge($this->config, $options);
     }
 }
