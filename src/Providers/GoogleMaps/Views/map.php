@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Google Map</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $apiKey ?? ''; ?>"></script>
     <script>
         function initMap() {
             const mapOptions = {
@@ -12,7 +12,6 @@
             };
             const map = new google.maps.Map(document.getElementById('<?php echo $id ?? 'map'; ?>'), mapOptions);
 
-            // Adding custom markers
             const markers = <?php echo json_encode($markers ?? []); ?>;
             markers.forEach(marker => {
                 const markerOptions = {
@@ -31,7 +30,6 @@
                 }
             });
 
-            // Adding overlays
             const overlays = <?php echo json_encode($overlays ?? []); ?>;
             overlays.forEach(overlay => {
                 const overlayBounds = new google.maps.LatLngBounds(

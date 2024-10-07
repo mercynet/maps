@@ -24,12 +24,12 @@ class GoogleMapConfig
     public static function defaultOptions(): array
     {
         return [
-            'center' => [37.7749, -122.4194], // Default center coordinates (San Francisco)
-            'zoom' => 12,                    // Default zoom level
-            'mapType' => 'roadmap',          // Default map type
-            'polygons' => [],                // Support for polygons
-            'markers' => [],                 // Support for custom markers
-            'overlays' => []                 // Support for overlays
+            'center' => [37.7749, -122.4194],
+            'zoom' => 12,
+            'mapType' => 'roadmap',
+            'polygons' => [],
+            'markers' => [],
+            'overlays' => []
         ];
     }
 
@@ -51,5 +51,10 @@ class GoogleMapConfig
     public static function getZoom(): int
     {
         return 12;
+    }
+
+    public static function apiKey(): string
+    {
+        return 'YOUR_API_KEY';
     }
 }

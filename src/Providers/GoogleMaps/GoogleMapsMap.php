@@ -101,18 +101,16 @@ class GoogleMapsMap implements MapInterface
         $polygons = $this->config['polygons'] ?? [];
         $markers = $this->config['markers'] ?? [];
         $overlays = $this->config['overlays'] ?? [];
+        $apiKey = GoogleMapConfig::apiKey();
 
-        // Validate center coordinates
         if (count($center) !== 2 || !is_numeric($center[0]) || !is_numeric($center[1])) {
             throw new InvalidCenterException('Invalid center coordinates.');
         }
 
-        // Validate zoom level
         if (!is_int($zoom) || $zoom < 0 || $zoom > 21) {
             throw new InvalidZoomException('Invalid zoom level.');
         }
 
-        // Validate maxZoom level
         if (isset($this->config['maxZoom']) && (!is_int($this->config['maxZoom']) || $this->config['maxZoom'] < 0 || $this->config['maxZoom'] > 21)) {
             throw new InvalidMaxZoomException('Invalid maxZoom level.');
         }
@@ -123,7 +121,7 @@ class GoogleMapsMap implements MapInterface
         }
 
         ob_start();
-        $variables = compact('id', 'center', 'zoom', 'mapType', 'polygons', 'markers', 'overlays');
+        $variables = compact('id', 'center', 'zoom', 'mapType', 'polygons', 'markers', 'overlays', 'apiKey');
         extract($variables);
         include $this->view;
         $output = ob_get_clean();
