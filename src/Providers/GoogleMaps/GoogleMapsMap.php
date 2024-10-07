@@ -77,7 +77,8 @@ class GoogleMapsMap implements MapInterface
         }
 
         ob_start();
-        extract(compact('id', 'center', 'zoom', 'tileLayer', 'maxZoom', 'apiKey'));
+        $variables = compact('id', 'center', 'zoom', 'tileLayer', 'maxZoom', 'apiKey');
+        extract($variables);
         include $this->view;
         $output = ob_get_clean();
 
