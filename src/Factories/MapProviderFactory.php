@@ -50,14 +50,14 @@ class MapProviderFactory
      * @return MapInterface The created map provider instance.
      * @throws InvalidProviderException If the map provider type is unsupported.
      */
-    public static function create(string $type): MapInterface
+    public static function create(string $type, string $id): MapInterface
     {
         if (!isset(self::$providers[$type])) {
             throw new InvalidProviderException("Unsupported map provider type: $type");
         }
 
         $providerClass = self::$providers[$type];
-        $providerInstance = new $providerClass();
+        $providerInstance = new $providerClass($id);
 
         if (!$providerInstance instanceof MapInterface) {
             throw new InvalidProviderException("The provider class $providerClass does not implement MapInterface.");
