@@ -1,21 +1,22 @@
 <?php
 
-namespace Maps\Providers;
+namespace Maps\Providers\GoogleMaps;
 
-use Maps\Interfaces\MapInterface;
-use Maps\Exceptions\InvalidZoomException;
 use Maps\Exceptions\InvalidMaxZoomException;
 use Maps\Exceptions\InvalidViewPathException;
+use Maps\Exceptions\InvalidZoomException;
+use Maps\Exceptions\InvalidCenterException;
+use Maps\Interfaces\MapInterface;
 
 class GoogleMapsMap implements MapInterface
 {
-    protected array $config;
-    protected string $id;
-    protected string $view = '../Views/GoogleMaps/map.php';
+    protected array $config = [];
+    protected string $id = '';
+    protected string $view = __DIR__ . '/../../Views/GoogleMaps/map.php';
 
     public function __construct(string $id)
     {
-        $this->config = GoogleMapsConfig::getDefaultOptions();
+        $this->config = GoogleMapConfig::getDefaultOptions();
         $this->id = $id;
     }
 
@@ -25,7 +26,7 @@ class GoogleMapsMap implements MapInterface
         if (is_array($center) && count($center) === 2 && is_float($center[0]) && is_float($center[1])) {
             return $center;
         }
-        throw new LeafletInvalidCenterException('Center must be an array of two floats.');
+        throw new InvalidCenterException('Center must be an array of two floats.');
     }
 
     public function getZoom(): int
@@ -68,11 +69,24 @@ class GoogleMapsMap implements MapInterface
         $zoom = $this->getZoom();
         $tileLayer = $this->getTileLayer();
         $maxZoom = $this->getMaxZoom();
+        $apiKey = $this->config['apiKey'];
+
+        if (!file_exists($this->view)) {
+            error_log('View file not found: ' . $this->view);
+            return '';
+        }
 
         ob_start();
+        extract(compact('id', 'center', 'zoom', 'tileLayer', 'maxZoom', 'apiKey'));
         include $this->view;
         $output = ob_get_clean();
-        return $output === false ? '' : $output;
+
+        if ($output === false) {
+            error_log('Failed to get buffer content in render method.');
+            return '';
+        }
+
+        return $output;
     }
 
     public function setCustomView(string $viewPath): void

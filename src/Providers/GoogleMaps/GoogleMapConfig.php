@@ -1,29 +1,29 @@
 <?php
 
-namespace Maps\GoogleMaps;
+namespace Maps\Providers\GoogleMaps;
 
 use Google\Client;
-use Google\Service\MapsEngine;
 
 class GoogleMapConfig
 {
     protected static Client $client;
-    protected static MapsEngine $mapsEngine;
+    private static string $apiKey = '';
 
     public static function initialize(string $apiKey): void
     {
         self::$client = new Client();
         self::$client->setDeveloperKey($apiKey);
-        self::$mapsEngine = new MapsEngine(self::$client);
+        self::$apiKey = $apiKey;
     }
 
     public static function getDefaultOptions(): array
     {
         return [
-            'center' => [51.505, -0.09],
-            'zoom' => 13,
+            'center' => [0.0, 0.0],
+            'zoom' => 8,
             'tileLayer' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            'maxZoom' => 19,
+            'maxZoom' => 18,
+            'apiKey' => self::$apiKey, // Add the API key here
         ];
     }
 
@@ -40,10 +40,5 @@ class GoogleMapConfig
     public static function getClient(): Client
     {
         return self::$client;
-    }
-
-    public static function getMapsEngine(): MapsEngine
-    {
-        return self::$mapsEngine;
     }
 }

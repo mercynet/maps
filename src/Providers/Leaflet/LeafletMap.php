@@ -1,12 +1,12 @@
 <?php
 
-namespace Maps\Leaflet;
+namespace Maps\Providers\Leaflet;
 
 use Maps\Exceptions\InvalidMaxZoomException;
 use Maps\Exceptions\InvalidViewPathException;
 use Maps\Exceptions\InvalidZoomException;
 use Maps\Interfaces\MapInterface;
-use Maps\Leaflet\Exceptions\LeafletInvalidCenterException;
+use Maps\Providers\Leaflet\Exceptions\LeafletInvalidCenterException;
 
 /**
  * The LeafletMap class is responsible for configuring and rendering a Leaflet map.
@@ -25,7 +25,7 @@ class LeafletMap implements MapInterface
      */
     private string $id;
 
-    private string $view = __DIR__ . '/../Views/Leaflet/map.php';
+    private string $view = __DIR__ . '/../../Views/Leaflet/map.php';
 
     /**
      * Constructor for the LeafletMap class.

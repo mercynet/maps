@@ -25,7 +25,7 @@ composer require mercynet/maps
 You can create a map using the specific map class (e.g., LeafletMap):
 
 ```php
-use Maps\Leaflet\LeafletMap;
+use Maps\Providers\Leaflet\LeafletMap;
 
 $map = new LeafletMap('mapId');
 ```

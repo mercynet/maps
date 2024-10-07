@@ -1,6 +1,6 @@
 <?php
 
-namespace Maps\Leaflet;
+namespace Maps\Providers\Leaflet;
 
 class LeafletConfig
 {

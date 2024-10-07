@@ -2,9 +2,9 @@
 
 use Maps\Exceptions\InvalidMaxZoomException;
 use Maps\Exceptions\InvalidZoomException;
-use Maps\Leaflet\Exceptions\LeafletInvalidCenterException;
-use Maps\Leaflet\LeafletMap;
-use Maps\Leaflet\LeafletConfig;
+use Maps\Providers\Leaflet\Exceptions\LeafletInvalidCenterException;
+use Maps\Providers\Leaflet\LeafletConfig;
+use Maps\Providers\Leaflet\LeafletMap;
 
 it('can load default configurations', function () {
     $map = new LeafletMap('map');
