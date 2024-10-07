@@ -3,7 +3,9 @@
 namespace Maps\Leaflet;
 
 use Maps\Exceptions\InvalidMaxZoomException;
+use Maps\Exceptions\InvalidViewPathException;
 use Maps\Exceptions\InvalidZoomException;
+use Maps\Interfaces\MapInterface;
 use Maps\Leaflet\Exceptions\LeafletInvalidCenterException;
 
 /**
@@ -11,7 +13,7 @@ use Maps\Leaflet\Exceptions\LeafletInvalidCenterException;
  * It allows setting various map options such as center coordinates, zoom level, tile layer, and maximum zoom level.
  * The class also provides methods to retrieve these configurations and render the map as an HTML view.
  */
-class LeafletMap
+class LeafletMap implements MapInterface
 {
     /**
      * @var array<string, mixed> Configuration options for the Leaflet map.
@@ -23,17 +25,18 @@ class LeafletMap
      */
     private string $id;
 
+    private ?string $view = __DIR__ . '/../Views/Leaflet/map.php';
+
     /**
      * Constructor for the LeafletMap class.
      *
      * Initializes the map configuration by merging default options with user-provided options.
      *
-     * @param string $id The ID of the HTML element where the map will be rendered.
-     * @param array<string, mixed> $options Optional configuration options to override the defaults.
+     * @param  string  $id  The ID of the HTML element where the map will be rendered.
      */
-    public function __construct(string $id, array $options = [])
+    public function __construct(string $id)
     {
-        $this->config = array_merge(LeafletConfig::getDefaultOptions(), $options);
+        $this->config = LeafletConfig::getDefaultOptions();
         $this->id = $id;
     }
 
@@ -127,8 +130,9 @@ class LeafletMap
      * @throws InvalidZoomException
      * @throws LeafletInvalidCenterException
      */
-    public function render(): string
+    public function render(array $options = []): string
     {
+        $this->config = array_merge($this->config, $options);
         $id = $this->getId();
         $center = $this->getCenter();
         $zoom = $this->getZoom();
@@ -136,8 +140,25 @@ class LeafletMap
         $maxZoom = $this->getMaxZoom();
 
         ob_start();
-        include __DIR__ . '/../Views/Leaflet/map.php';
+        include $this->view;
         $output = ob_get_clean();
         return $output === false ? '' : $output;
+    }
+
+    /**
+     * Set a custom view for rendering the map.
+     *
+     * This method allows setting a custom view path for rendering the map.
+     * If the provided view path does not exist, an InvalidViewPathException is thrown.
+     *
+     * @param string $viewPath The path to the custom view file.
+     * @throws InvalidViewPathException If the view file does not exist.
+     */
+    public function setCustomView(string $viewPath): void
+    {
+        if(!file_exists($this->view)) {
+            throw new InvalidViewPathException();
+        }
+        $this->view = $viewPath;
     }
 }

@@ -4,11 +4,12 @@ Maps is a PHP library designed to facilitate the integration and rendering of va
 
 ## Features
 
-- **Multiple Map Providers**: Supports Leaflet and Google Maps.
+- **Leaflet Map Support**: Provides integration with Leaflet maps.
 - **SOLID Principles**: Ensures maintainable and scalable code.
 - **Customizable Views**: Use built-in views or provide custom views.
 - **Comprehensive Testing**: Includes tests with PestPHP.
-- **Easily Extendable**: Add more map providers as needed.
+- **Easily Extendable**: Add more features as needed.
+- **Custom Exceptions**: Provides specific exceptions for better error handling and debugging.
 
 ## Installation
 
