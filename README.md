@@ -1,6 +1,7 @@
-# Maps Project
+=======
+# Maps
 
-This project provides a mapping solution using Google Maps and Leaflet. It includes functionality for rendering maps, adding markers, polygons, and overlays.
+Maps is a PHP library designed to facilitate the integration and rendering of various map providers, such as Leaflet and Google Maps, in web applications. It adheres to SOLID principles, design patterns, and clean code practices, ensuring maintainability and scalability. The package allows developers to either use built-in views for map rendering or customize their own views by providing necessary data. It includes comprehensive tests using PestPHP to ensure reliability and correctness. The package is structured to be easily extendable, allowing the addition of more map providers in the future.
 
 ## Installation
 
