@@ -19,19 +19,35 @@ class LeafletConfig
      *     maxZoom: int,
      *     polygons: array,
      *     markers: array,
-     *     overlays: array
+     *     overlays: array,
+     *     centerPoint: float[],
+     *     zoomLevel: int,
+     *     maxZoomLevel: int,
+     *     markerArray: array,
+     *     tileHost: string,
+     *     attribution: string,
+     *     leafletVersion: string,
+     *     icon: array
      * }
      */
     public static function defaultOptions(): array
     {
         return [
-            'center' => [51.505, -0.09],
+            'center' => [38.7167, -9.1333], // Lisbon coordinates
             'zoom' => 13,
             'tileLayer' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             'maxZoom' => 19,
-            'polygons' => [], // Support for polygons
-            'markers' => [],  // Support for custom markers
-            'overlays' => []  // Support for overlays
+            'polygons' => [],
+            'markers' => [],
+            'overlays' => [],
+            'centerPoint' => [38.7167, -9.1333], // Lisbon coordinates
+            'zoomLevel' => 13,
+            'maxZoomLevel' => 19,
+            'markerArray' => [],
+            'tileHost' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            'attribution' => '',
+            'leafletVersion' => '1.7.1',
+            'icon' => []
         ];
     }
 
