@@ -27,6 +27,8 @@ class LeafletPolygonMap implements MapInterface
      */
     protected string $view = __DIR__.'/Views/polygon_map.php';
 
+    protected array $attributes;
+
     /**
      * LeafletPolygonMap constructor.
      *
@@ -94,7 +96,7 @@ class LeafletPolygonMap implements MapInterface
      * @param array $options Additional options for rendering the map
      * @return string The rendered map HTML
      */
-    public function render(array $options = []): string
+    public function render(array $options = [], array $attributes = []): string
     {
         $this->config = array_merge($this->config, $options);
         $id = $this->getId();
@@ -110,9 +112,16 @@ class LeafletPolygonMap implements MapInterface
             error_log('View file not found: ' . $this->view);
             return '';
         }
+        $this->attributes = array_merge([
+            'class' => '',
+            'style' => 'width: 100%; height: 500px;'
+        ], $attributes);
+        $mapId = $this->id;
 
         ob_start();
         $variables = compact('id', 'center', 'zoom', 'tileLayer', 'maxZoom', 'polygons', 'markers', 'overlays');
+        extract($this->config);
+        extract($this->attributes);
         extract($variables);
         include $this->view;
         $output = ob_get_clean();

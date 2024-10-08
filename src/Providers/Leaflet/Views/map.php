@@ -48,11 +48,7 @@ $style = $style ?? 'width: 100%; height: 500px;';
         }
 
         #<?= $mapId ?> {
-        <?php if (!isset($attributes['style'])) : ?>
-            height: 100vh;
-        <?php else: ?>
-        <?= $attributes['style']; ?>
-        <?php endif ?>
+        <?=!isset($style) ? 'height: 100vh' : $style; ?>
         }
     </style>
     <script>
