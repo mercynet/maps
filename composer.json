@@ -1,7 +1,7 @@
 {
   "name": "mercynet/maps",
   "description": "A package to load maps with support for Leaflet and Google Maps",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "require": {
     "php": "^8.3",
