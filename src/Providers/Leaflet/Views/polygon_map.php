@@ -1,42 +1,116 @@
+<?php
+
+$centerPoint = $centerPoint ?? [38.7167, -9.1333];
+$zoomLevel = $zoomLevel ?? 5;
+$maxZoomLevel = $maxZoomLevel ?? 18;
+$markers = $markers ?? [];
+$markerArray = $markerArray ?? [];
+$tileHost = $tileHost ?? 'openstreetmap';
+$mapId = $mapId ?? 'map';
+$attribution = $attribution ?? 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors, Imagery © Mapbox.com';
+$leafletVersion = $leafletVersion ?? '1.9.4';
+$class = $class ?? '';
+$style = $style ?? 'width: 100%; height: 500px;';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Leaflet Map with Polygon, Markers, and Overlays</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        function initMap() {
-            const mapOptions = {
-                center: ['<?php echo $center[0] ?? 0; ?>', '<?php echo $center[1] ?? 0; ?>'],
-                zoom: <?php echo $zoom ?? 8; ?>
-            };
-            const map = L.map('<?php echo $id ?? 'map'; ?>').setView(mapOptions.center, mapOptions.zoom);
+    <head>
+        <title>Leaflet Map</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@<?= $leafletVersion; ?>/dist/leaflet.css"/>
+        <script src="https://unpkg.com/leaflet@<?= $leafletVersion; ?>/dist/leaflet.js"></script>
+        <style>
+            .leaflet-overlay-pane {
+                z-index: 5 !important;
+            }
 
-            L.tileLayer('<?php echo $tileLayer ?? ''; ?>', {
-                maxZoom: <?php echo $maxZoom ?? 18; ?>
-            }).addTo(map);
+            .leaflet-shadow-pane {
+                z-index: 4 !important;
+            }
 
-            // Adding polygons
-            const polygons = <?php echo json_encode($polygons ?? []); ?>;
-            polygons.forEach(polygon => {
-                L.polygon(polygon.coordinates).addTo(map).bindPopup(polygon.popupText);
-            });
+            .leaflet-div-icon {
+                background-color: #f4f4f4;
+                border: 1px solid #666;
+                border-radius: 50%;
+                display: inline-block;
+            }
 
-            // Adding custom markers
-            const markers = <?php echo json_encode($markers ?? []); ?>;
-            markers.forEach(marker => {
-                L.marker(marker.coordinates, { icon: L.icon(marker.icon) }).addTo(map).bindPopup(marker.popupText);
-            });
+            .leaflet-editing-icon {
+                background-color: #f4f4f4;
+                border: 1px solid #666;
+                border-radius: 50%;
+                display: inline-block;
+            }
 
-            // Adding overlays
-            const overlays = <?php echo json_encode($overlays ?? []); ?>;
-            overlays.forEach(overlay => {
-                L.imageOverlay(overlay.url, overlay.bounds).addTo(map);
-            });
-        }
-    </script>
-</head>
+            .my-own-icon {
+                width: 300px;
+                height: 300px;
+                background-color: #f4f4f4;
+            }
+
+            #
+            <?=$mapId?>
+            {
+            <?php if(! isset($attributes['style'])) :?>
+                height: 100vh
+            ;
+            <?php else:?>
+            <?=$attributes['style'];?>
+            <?php endif?>
+            }
+        </style>
+        <script>
+            function initMap() {
+                const mymap = L.map('<?= $mapId ?>').setView([<?= $centerPoint['lat'] ?? 38.7440722 ?>, <?= $centerPoint['long'] ??
+                    -9.2009352 ?>], <?= $zoomLevel ?>);
+                let latLongs = [], marker = null, icon = null, points = L.layerGroup(), polyLines = L.layerGroup();
+                <?php foreach ($markers as $marker): ?>
+                <?php if (isset($marker['icon'])): ?>
+                icon = L.icon({
+                    iconUrl: '<?= $marker['icon'] ?>',
+                    iconSize: [<?= $marker['iconSizeX'] ?? 32 ?>, <?= $marker['iconSizeY'] ?? 32 ?>],
+                });
+                <?php endif; ?>
+                marker = L.marker([<?= $marker['lat'] ?? $marker[0] ?>, <?= $marker['long'] ??
+                    $marker[1] ?>] <?php if (isset($marker['icon'])): ?>, {icon: icon}<?php endif; ?>);
+                marker.addTo(points);
+                <?php if (isset($marker['info'])): ?>
+                marker.bindPopup('<?= json_encode($marker['info']) ?>');
+                <?php endif; ?>
+                latLongs.push([<?= $marker['lat'] ?? $marker[0] ?>, <?= $marker['long'] ?? $marker[1] ?>]);
+                <?php endforeach; ?>
+                const polyline = L.polyline(latLongs, {color: '#000', opacity: 0.4, weight: 10}).addTo(polyLines);
+                points.addTo(mymap);
+                polyLines.addTo(mymap);
+
+                <?php if ($tileHost === 'mapbox'): ?>
+                let url<?= $mapId ?> = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=<?= config(
+                    'maps.mapbox.access_token',
+                    null
+                ) ?>';
+                <?php elseif ($tileHost === 'openstreetmap'): ?>
+                let url<?= $mapId ?> = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                <?php else: ?>
+                let url<?= $mapId ?> = '<?= $tileHost ?>';
+                <?php endif; ?>
+                L.tileLayer(url<?= $mapId ?>, {
+                    maxZoom: <?= $maxZoomLevel ?>,
+                    attribution: '<?= $attribution ?>',
+                    id: 'mapbox/streets-v11',
+                    tileSize: 512,
+                    zoomOffset: -1
+                }).addTo(mymap);
+                <?php if (!empty($markers)): ?>
+                mymap.fitBounds(polyline.getBounds());
+                <?php endif; ?>
+            }
+        </script>
+    </head>
 <body onload="initMap()">
-<div id="<?php echo $id ?? 'map'; ?>" style="width: 100%; height: 500px;"></div>
+<div id="<?php
+echo $id ?? 'map'; ?>" style="width: 100%; height: 500px;"></div>
 </body>
 </html>

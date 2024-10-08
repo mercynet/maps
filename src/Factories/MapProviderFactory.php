@@ -37,7 +37,7 @@ class MapProviderFactory
      */
     protected static function loadProviders(array $customConfig = []): void
     {
-        $defaultConfig = include '../config/maps.php';
+        $defaultConfig = include __DIR__ . '/../config/maps.php';
         self::$providers = array_merge($defaultConfig['providers'], $customConfig['providers'] ?? []);
     }
 

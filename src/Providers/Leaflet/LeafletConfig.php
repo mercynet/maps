@@ -46,7 +46,7 @@ class LeafletConfig
             'markerArray' => [],
             'tileHost' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             'attribution' => '',
-            'leafletVersion' => '1.7.1',
+            'leafletVersion' => '1.9.4',
             'icon' => []
         ];
     }
